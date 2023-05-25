@@ -1,0 +1,64 @@
+name: Build
+on:
+  push:
+    paths-ignore:
+      - '**/README.md'
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+permissions: read-all
+jobs:
+  build:
+    name: Build ${{ matrix.target }} target
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: web
+            build_args: --base-href /${{ github.event.repository.name }}/
+          - os: ubuntu-latest
+            target: linux
+          - os: ubuntu-latest
+            target: apk
+            build_args: --target-platform android-arm64
+          - os: macos-latest
+            target: macos
+          - os: macos-latest
+            target: ios
+            build_args: --no-codesign
+          - os: windows-latest
+            target: windows
+    steps:
+      - name: Install Linux target dependencies
+        if: matrix.target == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
+      - name: Install Android target dependencies
+        if: matrix.target == 'apk'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - name: Enable desktop support
+        if: matrix.target != 'android' && matrix.target != 'ios' && matrix.target != 'web'
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --enable-macos-desktop
+          flutter config --enable-windows-desktop
+      - name: Check Flutter status
+        run: flutter doctor -v
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get pub packages
+        run: flutter pub get
+      - name: Build ${{ matrix.target }} target
+        run: flutter build -v ${{ matrix.target }} --release ${{ matrix.build_args }}
