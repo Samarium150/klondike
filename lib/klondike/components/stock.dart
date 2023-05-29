@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flame/experimental.dart';
+import 'package:flame/events.dart';
 
 import '../klondike.dart';
 import 'card.dart';
