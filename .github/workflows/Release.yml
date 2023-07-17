@@ -94,7 +94,7 @@ jobs:
         working-directory: ${{ matrix.build_path }}
       - name: Upload web artifact for GitHub Pages
         if: matrix.target == 'web'
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ${{ matrix.build_path }}
       - name: Deploy to Releases
