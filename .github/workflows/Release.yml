@@ -65,7 +65,7 @@ jobs:
       - name: Check Flutter status
         run: flutter doctor -v
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get pub packages
         run: flutter pub get
       - name: Build ${{ matrix.target }}
