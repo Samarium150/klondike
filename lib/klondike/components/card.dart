@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/game.dart';
 
 import '../klondike.dart';
 import '../model/rank.dart';
@@ -242,7 +241,7 @@ final class Card extends PositionComponent with DragCallbacks {
     if (!_isDragging) {
       return;
     }
-    final cameraZoom = (findGame()! as FlameGame)
+    final cameraZoom = findGame()!
         .firstChild<CameraComponent>()!
         .viewfinder
         .zoom;
