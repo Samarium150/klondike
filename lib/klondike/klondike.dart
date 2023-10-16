@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 
@@ -55,9 +54,11 @@ final class Klondike extends FlameGame {
       ..addAll(piles);
     add(world);
 
-    final camera = CameraComponent(world: world)
-      ..viewfinder.visibleGameSize =
-          Vector2(cardWidth * 7 + cardGap * 8, 4 * cardHeight + 3 * cardGap)
+    final camera = CameraComponent.withFixedResolution(
+      world: world,
+      width: cardWidth * 7 + cardGap * 8,
+      height: 4 * cardHeight + 3 * cardGap,
+    )
       ..viewfinder.position = Vector2(cardWidth * 3.5 + cardGap * 4, 0)
       ..viewfinder.anchor = Anchor.topCenter;
     add(camera);
